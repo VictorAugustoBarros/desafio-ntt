@@ -22,6 +22,8 @@ const product_service_1 = require("./services/product.service");
 const find_product_handler_1 = require("./handlers/find-product.handler");
 const find_product_by_name_use_case_1 = require("./use-cases/find-product-by-name.use-case");
 const find_product_by_id_use_case_1 = require("./use-cases/find-product-by-id.use-case");
+const delete_product_use_case_1 = require("./use-cases/delete-product.use-case");
+const update_product_use_case_1 = require("./use-cases/update-product.use-case");
 let ProductModule = class ProductModule {
 };
 exports.ProductModule = ProductModule;
@@ -39,6 +41,8 @@ exports.ProductModule = ProductModule = __decorate([
             create_product_use_case_1.CreateProductUseCase,
             find_product_by_name_use_case_1.FindProductByNameUseCase,
             find_product_by_id_use_case_1.FindProductByUuidUseCase,
+            update_product_use_case_1.UpdateProductUseCase,
+            delete_product_use_case_1.DeleteProductUseCase,
             {
                 provide: product_constants_1.IProductServiceToken,
                 useClass: product_service_1.ProductService,

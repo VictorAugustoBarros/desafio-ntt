@@ -8,6 +8,7 @@ class ProductDto {
     description;
     price;
     categoryId;
+    category;
 }
 exports.ProductDto = ProductDto;
 //# sourceMappingURL=product.dto.js.map

@@ -12,29 +12,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FindAllProductsHandler = void 0;
 const common_1 = require("@nestjs/common");
 const find_all_products_use_case_1 = require("../use-cases/find-all-products.use-case");
+const redis_service_1 = require("../../../shared/redis/redis.service");
 let FindAllProductsHandler = class FindAllProductsHandler {
     findAllProductsUseCase;
-    constructor(findAllProductsUseCase) {
+    redisService;
+    cacheKey = 'products:all';
+    constructor(findAllProductsUseCase, redisService) {
         this.findAllProductsUseCase = findAllProductsUseCase;
+        this.redisService = redisService;
     }
     async execute() {
+        const cached = await this.redisService.getKey(this.cacheKey);
+        if (cached) {
+            return JSON.parse(cached);
+        }
         const products = await this.findAllProductsUseCase.execute();
-        return {
-            products: products.map((product) => {
-                return {
-                    uuid: product.uuid,
-                    name: product.name,
-                    description: product.description,
-                    price: product.price,
-                    categoria: '',
-                };
-            }),
+        const response = {
+            products: products.map((product) => ({
+                uuid: product.uuid,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                category: {
+                    uuid: product.category?.uuid ?? '',
+                    name: product.category?.name ?? '',
+                },
+            })),
         };
+        await this.redisService.setKey(this.cacheKey, JSON.stringify(response), 60);
+        return response;
     }
 };
 exports.FindAllProductsHandler = FindAllProductsHandler;
 exports.FindAllProductsHandler = FindAllProductsHandler = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [find_all_products_use_case_1.FindAllProductsUseCase])
+    __metadata("design:paramtypes", [find_all_products_use_case_1.FindAllProductsUseCase,
+        redis_service_1.RedisService])
 ], FindAllProductsHandler);
 //# sourceMappingURL=find-all-products.handler.js.map

@@ -15,12 +15,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateProductHandler = void 0;
 const common_1 = require("@nestjs/common");
 const product_constants_1 = require("../constants/product.constants");
+const product_error_enum_1 = require("../exceptions/product-error.enum");
+const product_exception_error_1 = require("../exceptions/product-exception.error");
+const update_product_use_case_1 = require("../use-cases/update-product.use-case");
+const category_constants_1 = require("../../category/constants/category.constants");
 let UpdateProductHandler = class UpdateProductHandler {
+    productService;
     categoryService;
-    constructor(categoryService) {
+    updateProductUseCase;
+    constructor(productService, categoryService, updateProductUseCase) {
+        this.productService = productService;
         this.categoryService = categoryService;
+        this.updateProductUseCase = updateProductUseCase;
     }
-    async execute(uuid, new_categoria) {
+    async execute(uuid, updateProduct) {
+        const product = await this.productService.getProduct({
+            uuid: uuid,
+        });
+        if (!product) {
+            throw new product_exception_error_1.ProductExceptionError(product_error_enum_1.ProductErrorCode.PRODUCT_NOT_FOUND);
+        }
+        const params = {
+            uuid: uuid,
+            name: updateProduct.name,
+            description: updateProduct.description,
+            price: updateProduct.price,
+        };
+        if (updateProduct.categoryUuid) {
+            const category = await this.categoryService.getCategory({
+                uuid: updateProduct.categoryUuid,
+            });
+            if (!category) {
+                throw new product_exception_error_1.ProductExceptionError(product_error_enum_1.ProductErrorCode.PRODUCT_CATEGORY_NOT_FOUND);
+            }
+            params.categoryId = category.id;
+        }
+        await this.updateProductUseCase.execute(params);
         return {
             message: 'Produto atualizada com sucesso',
         };
@@ -30,6 +60,7 @@ exports.UpdateProductHandler = UpdateProductHandler;
 exports.UpdateProductHandler = UpdateProductHandler = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)(product_constants_1.IProductServiceToken)),
-    __metadata("design:paramtypes", [Object])
+    __param(1, (0, common_1.Inject)(category_constants_1.ICategoryServiceToken)),
+    __metadata("design:paramtypes", [Object, Object, update_product_use_case_1.UpdateProductUseCase])
 ], UpdateProductHandler);
 //# sourceMappingURL=update-product.handler.js.map

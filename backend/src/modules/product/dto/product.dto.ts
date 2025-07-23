@@ -1,3 +1,5 @@
+import { Categoria } from '@prisma/client';
+
 export class ProductDto {
   id: number;
   uuid: string;
@@ -5,4 +7,5 @@ export class ProductDto {
   description: string;
   price: number;
   categoryId: number;
+  category?: Categoria;
 }

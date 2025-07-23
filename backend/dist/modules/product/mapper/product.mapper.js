@@ -9,6 +9,7 @@ function toProductDto(entity) {
         description: entity.description,
         price: entity.price,
         categoryId: entity.categoryId,
+        category: entity.category ?? undefined,
     };
 }
 //# sourceMappingURL=product.mapper.js.map

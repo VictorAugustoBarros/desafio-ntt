@@ -1,5 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
+
+export class ProductsCategory {
+  @ApiProperty()
+  @IsString()
+  uuid: string;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+}
 
 export class FindProductResponse {
   @ApiProperty()
@@ -15,6 +26,6 @@ export class FindProductResponse {
   price: number;
 
   @ApiProperty()
-  @IsString()
-  categoria: string;
+  @Type(() => ProductsCategory)
+  category: ProductsCategory;
 }

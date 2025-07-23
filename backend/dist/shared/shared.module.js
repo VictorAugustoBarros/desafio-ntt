@@ -9,13 +9,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SharedModule = void 0;
 const common_1 = require("@nestjs/common");
 const database_module_1 = require("./database/database.module");
+const redis_module_1 = require("./redis/redis.module");
 let SharedModule = class SharedModule {
 };
 exports.SharedModule = SharedModule;
 exports.SharedModule = SharedModule = __decorate([
     (0, common_1.Module)({
-        imports: [database_module_1.DatabaseModule],
-        exports: [database_module_1.DatabaseModule],
+        imports: [database_module_1.DatabaseModule, redis_module_1.RedisModule],
+        exports: [database_module_1.DatabaseModule, redis_module_1.RedisModule],
     })
 ], SharedModule);
 //# sourceMappingURL=shared.module.js.map

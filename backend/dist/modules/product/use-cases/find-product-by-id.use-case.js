@@ -24,6 +24,9 @@ let FindProductByUuidUseCase = FindProductByUuidUseCase_1 = class FindProductByU
         try {
             const productDB = await this.prisma.produto.findFirst({
                 where: { uuid },
+                include: {
+                    category: true,
+                },
             });
             if (!productDB) {
                 return null;

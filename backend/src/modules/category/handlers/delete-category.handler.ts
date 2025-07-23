@@ -23,7 +23,7 @@ export class DeleteCategoryHandler {
     await this.deleteCategoryUseCase.execute(uuid);
 
     return {
-      message: 'Category deletada com sucesso',
+      message: 'Categoria deletada com sucesso',
     };
   }
 }

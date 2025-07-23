@@ -9,16 +9,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FindAllProductsResponse = exports.FindAllProducts = void 0;
+exports.FindAllProductsResponse = exports.FindAllProducts = exports.ProductsCategory = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const swagger_1 = require("@nestjs/swagger");
+class ProductsCategory {
+    uuid;
+    name;
+}
+exports.ProductsCategory = ProductsCategory;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ProductsCategory.prototype, "uuid", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ProductsCategory.prototype, "name", void 0);
 class FindAllProducts {
     uuid;
     name;
     description;
     price;
-    categoria;
+    category;
 }
 exports.FindAllProducts = FindAllProducts;
 __decorate([
@@ -43,9 +58,9 @@ __decorate([
 ], FindAllProducts.prototype, "price", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], FindAllProducts.prototype, "categoria", void 0);
+    (0, class_transformer_1.Type)(() => ProductsCategory),
+    __metadata("design:type", ProductsCategory)
+], FindAllProducts.prototype, "category", void 0);
 class FindAllProductsResponse {
     products;
 }

@@ -2,6 +2,16 @@ import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
+export class ProductsCategory {
+  @ApiProperty()
+  @IsString()
+  uuid: string;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+}
+
 export class FindAllProducts {
   @ApiProperty()
   @IsString()
@@ -20,8 +30,8 @@ export class FindAllProducts {
   price: number;
 
   @ApiProperty()
-  @IsString()
-  categoria: string;
+  @Type(() => ProductsCategory)
+  category: ProductsCategory;
 }
 
 export class FindAllProductsResponse {

@@ -17,28 +17,44 @@ const common_1 = require("@nestjs/common");
 const product_constants_1 = require("../constants/product.constants");
 const product_error_enum_1 = require("../exceptions/product-error.enum");
 const product_exception_error_1 = require("../exceptions/product-exception.error");
+const redis_service_1 = require("../../../shared/redis/redis.service");
 let FindProductHandler = class FindProductHandler {
     productService;
-    constructor(productService) {
+    redisService;
+    constructor(productService, redisService) {
         this.productService = productService;
+        this.redisService = redisService;
+    }
+    getCacheKey(uuid) {
+        return `product:${uuid}`;
     }
     async execute(uuid) {
+        const cacheKey = this.getCacheKey(uuid);
+        const cached = await this.redisService.getKey(cacheKey);
+        if (cached) {
+            return JSON.parse(cached);
+        }
         const product = await this.productService.getProduct({ uuid: uuid });
         if (!product) {
             throw new product_exception_error_1.ProductExceptionError(product_error_enum_1.ProductErrorCode.PRODUCT_NOT_FOUND);
         }
-        return {
+        const response = {
             name: product.name,
             description: product.description,
             price: product.price,
-            categoria: '',
+            category: {
+                uuid: product.category?.uuid ?? '',
+                name: product.category?.name ?? '',
+            },
         };
+        await this.redisService.setKey(cacheKey, JSON.stringify(response), 60);
+        return response;
     }
 };
 exports.FindProductHandler = FindProductHandler;
 exports.FindProductHandler = FindProductHandler = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)(product_constants_1.IProductServiceToken)),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:paramtypes", [Object, redis_service_1.RedisService])
 ], FindProductHandler);
 //# sourceMappingURL=find-product.handler.js.map

@@ -15,14 +15,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeleteProductHandler = void 0;
 const common_1 = require("@nestjs/common");
 const product_constants_1 = require("../constants/product.constants");
+const product_exception_error_1 = require("../exceptions/product-exception.error");
+const product_error_enum_1 = require("../exceptions/product-error.enum");
+const delete_product_use_case_1 = require("../use-cases/delete-product.use-case");
 let DeleteProductHandler = class DeleteProductHandler {
     productService;
-    constructor(productService) {
+    deleteProductUseCase;
+    constructor(productService, deleteProductUseCase) {
         this.productService = productService;
+        this.deleteProductUseCase = deleteProductUseCase;
     }
     async execute(uuid) {
+        const product = await this.productService.getProduct({
+            uuid: uuid,
+        });
+        if (!product) {
+            throw new product_exception_error_1.ProductExceptionError(product_error_enum_1.ProductErrorCode.PRODUCT_NOT_FOUND);
+        }
+        await this.deleteProductUseCase.execute(uuid);
         return {
-            message: '',
+            message: 'Produto deletado com sucesso',
         };
     }
 };
@@ -30,6 +42,6 @@ exports.DeleteProductHandler = DeleteProductHandler;
 exports.DeleteProductHandler = DeleteProductHandler = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)(product_constants_1.IProductServiceToken)),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:paramtypes", [Object, delete_product_use_case_1.DeleteProductUseCase])
 ], DeleteProductHandler);
 //# sourceMappingURL=delete-product.handler.js.map

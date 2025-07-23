@@ -22,7 +22,11 @@ let FindAllProductsUseCase = FindAllProductsUseCase_1 = class FindAllProductsUse
     }
     async execute() {
         try {
-            const productsDB = await this.prisma.produto.findMany({});
+            const productsDB = await this.prisma.produto.findMany({
+                include: {
+                    category: true,
+                },
+            });
             return productsDB.map((productDB) => {
                 return (0, product_mapper_1.toProductDto)(productDB);
             });

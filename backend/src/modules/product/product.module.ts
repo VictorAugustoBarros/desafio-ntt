@@ -13,6 +13,8 @@ import { ProductService } from './services/product.service';
 import { FindProductHandler } from './handlers/find-product.handler';
 import { FindProductByNameUseCase } from './use-cases/find-product-by-name.use-case';
 import { FindProductByUuidUseCase } from './use-cases/find-product-by-id.use-case';
+import { DeleteProductUseCase } from './use-cases/delete-product.use-case';
+import { UpdateProductUseCase } from './use-cases/update-product.use-case';
 
 @Module({
   imports: [SharedModule, CategoryModule],
@@ -30,6 +32,8 @@ import { FindProductByUuidUseCase } from './use-cases/find-product-by-id.use-cas
     CreateProductUseCase,
     FindProductByNameUseCase,
     FindProductByUuidUseCase,
+    UpdateProductUseCase,
+    DeleteProductUseCase,
 
     // Services
     {

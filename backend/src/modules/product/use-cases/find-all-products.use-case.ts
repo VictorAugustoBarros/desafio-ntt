@@ -17,7 +17,11 @@ export class FindAllProductsUseCase {
 
   async execute(): Promise<ProductDto[]> {
     try {
-      const productsDB: Produto[] = await this.prisma.produto.findMany({});
+      const productsDB: Produto[] = await this.prisma.produto.findMany({
+        include: {
+          category: true,
+        },
+      });
 
       return productsDB.map((productDB: Produto) => {
         return toProductDto(productDB);

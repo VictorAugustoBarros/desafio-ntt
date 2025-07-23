@@ -19,6 +19,9 @@ export class FindProductByNameUseCase {
     try {
       const productDB: Produto | null = await this.prisma.produto.findFirst({
         where: { name },
+        include: {
+          category: true,
+        },
       });
 
       if (!productDB) {
