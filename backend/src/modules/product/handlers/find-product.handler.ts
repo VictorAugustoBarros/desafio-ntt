@@ -5,6 +5,7 @@ import { ProductExceptionError } from '../exceptions/product-exception.error';
 import { IProductService } from '../interfaces/product.service.interface';
 import { FindProductResponse } from '../dto/find/find-product-response.dto';
 import { RedisService } from 'src/shared/redis/redis.service';
+import { REDIS_KEYS } from 'src/shared/redis/constants/redis-keys.constants';
 
 @Injectable()
 export class FindProductHandler {
@@ -14,14 +15,9 @@ export class FindProductHandler {
     private redisService: RedisService,
   ) {}
 
-  private getCacheKey(uuid: string): string {
-    return `product:${uuid}`;
-  }
-
   async execute(uuid: string): Promise<FindProductResponse> {
     // Tenta pegar do cache
-    const cacheKey = this.getCacheKey(uuid);
-    const cached = await this.redisService.getKey(cacheKey);
+    const cached = await this.redisService.getKey(REDIS_KEYS.PRODUCT(uuid));
     if (cached) {
       return JSON.parse(cached) as FindProductResponse;
     }
@@ -33,6 +29,7 @@ export class FindProductHandler {
     }
 
     const response: FindProductResponse = {
+      uuid: product.uuid,
       name: product.name,
       description: product.description,
       price: product.price,
@@ -43,7 +40,11 @@ export class FindProductHandler {
     };
 
     // Salva no cache
-    await this.redisService.setKey(cacheKey, JSON.stringify(response), 60);
+    await this.redisService.setKey(
+      REDIS_KEYS.PRODUCT(uuid),
+      JSON.stringify(response),
+      60,
+    );
 
     return response;
   }

@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   UseFilters,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -28,6 +29,7 @@ import { UpdateProductRequest } from '../dto/update/update-product-request.dto';
 import { UpdateProductResponse } from '../dto/update/update-product-response.dto';
 import { DeleteProductHandler } from '../handlers/delete-product.handler';
 import { UpdateProductHandler } from '../handlers/update-product.handler';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -48,8 +50,10 @@ export class ProductController {
     description: 'List of products',
     type: FindAllProductsResponse,
   })
-  findAll(): Promise<FindAllProductsResponse> {
-    return this.findAllProductsHandler.execute();
+  findAll(
+    @Query() paginationDto: PaginationDto,
+  ): Promise<FindAllProductsResponse> {
+    return this.findAllProductsHandler.execute(paginationDto);
   }
 
   @Get(':uuid')

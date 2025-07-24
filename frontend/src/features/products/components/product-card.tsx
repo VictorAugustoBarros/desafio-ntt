@@ -21,7 +21,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <CardHeader>
         <div className="flex justify-between items-start mb-2">
           <Badge variant="secondary" className="text-xs">
-            {product.category}
+            {product.category.name}
           </Badge>
           <span className="text-xs text-muted-foreground font-mono">
             {product.uuid.slice(0, 8)}...
@@ -34,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </CardHeader>
       <CardContent className="flex-grow">
         <div className="text-2xl font-bold text-primary">
-          ${product.price.toFixed(2)}
+          R${product.price.toFixed(2)}
         </div>
       </CardContent>
       <CardFooter>

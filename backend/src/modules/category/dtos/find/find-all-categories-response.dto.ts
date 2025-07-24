@@ -10,5 +10,5 @@ export class FindAllCategoriesResponse {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CategoryDto)
-  categorias: Omit<CategoryDto, 'id'>[];
+  categories: Omit<CategoryDto, 'id'>[];
 }

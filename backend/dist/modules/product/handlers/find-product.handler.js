@@ -18,6 +18,7 @@ const product_constants_1 = require("../constants/product.constants");
 const product_error_enum_1 = require("../exceptions/product-error.enum");
 const product_exception_error_1 = require("../exceptions/product-exception.error");
 const redis_service_1 = require("../../../shared/redis/redis.service");
+const redis_keys_constants_1 = require("../../../shared/redis/constants/redis-keys.constants");
 let FindProductHandler = class FindProductHandler {
     productService;
     redisService;
@@ -25,12 +26,8 @@ let FindProductHandler = class FindProductHandler {
         this.productService = productService;
         this.redisService = redisService;
     }
-    getCacheKey(uuid) {
-        return `product:${uuid}`;
-    }
     async execute(uuid) {
-        const cacheKey = this.getCacheKey(uuid);
-        const cached = await this.redisService.getKey(cacheKey);
+        const cached = await this.redisService.getKey(redis_keys_constants_1.REDIS_KEYS.PRODUCT(uuid));
         if (cached) {
             return JSON.parse(cached);
         }
@@ -39,6 +36,7 @@ let FindProductHandler = class FindProductHandler {
             throw new product_exception_error_1.ProductExceptionError(product_error_enum_1.ProductErrorCode.PRODUCT_NOT_FOUND);
         }
         const response = {
+            uuid: product.uuid,
             name: product.name,
             description: product.description,
             price: product.price,
@@ -47,7 +45,7 @@ let FindProductHandler = class FindProductHandler {
                 name: product.category?.name ?? '',
             },
         };
-        await this.redisService.setKey(cacheKey, JSON.stringify(response), 60);
+        await this.redisService.setKey(redis_keys_constants_1.REDIS_KEYS.PRODUCT(uuid), JSON.stringify(response), 60);
         return response;
     }
 };

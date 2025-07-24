@@ -15,6 +15,10 @@ export class ProductsCategory {
 export class FindProductResponse {
   @ApiProperty()
   @IsString()
+  uuid: string;
+
+  @ApiProperty()
+  @IsString()
   name: string;
 
   @ApiProperty()

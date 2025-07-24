@@ -15,7 +15,7 @@ const class_transformer_1 = require("class-transformer");
 const category_dto_1 = require("../category.dto");
 const swagger_1 = require("@nestjs/swagger");
 class FindAllCategoriesResponse {
-    categorias;
+    categories;
 }
 exports.FindAllCategoriesResponse = FindAllCategoriesResponse;
 __decorate([
@@ -26,5 +26,5 @@ __decorate([
     (0, class_validator_1.ValidateNested)({ each: true }),
     (0, class_transformer_1.Type)(() => category_dto_1.CategoryDto),
     __metadata("design:type", Array)
-], FindAllCategoriesResponse.prototype, "categorias", void 0);
+], FindAllCategoriesResponse.prototype, "categories", void 0);
 //# sourceMappingURL=find-all-categories-response.dto.js.map

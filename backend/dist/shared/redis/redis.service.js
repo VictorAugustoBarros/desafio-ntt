@@ -35,6 +35,9 @@ let RedisService = class RedisService {
             await this.client.set(key, value);
         }
     }
+    async invalidateKey(key) {
+        await this.client.del(key);
+    }
     async onModuleDestroy() {
         await this.client.quit();
     }

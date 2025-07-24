@@ -3,5 +3,10 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  category: string;
+  category: Category;
+}
+
+export interface Category {
+  uuid: string;
+  name: string;
 }

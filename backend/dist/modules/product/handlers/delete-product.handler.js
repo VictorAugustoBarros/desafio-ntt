@@ -18,12 +18,16 @@ const product_constants_1 = require("../constants/product.constants");
 const product_exception_error_1 = require("../exceptions/product-exception.error");
 const product_error_enum_1 = require("../exceptions/product-error.enum");
 const delete_product_use_case_1 = require("../use-cases/delete-product.use-case");
+const redis_keys_constants_1 = require("../../../shared/redis/constants/redis-keys.constants");
+const redis_service_1 = require("../../../shared/redis/redis.service");
 let DeleteProductHandler = class DeleteProductHandler {
     productService;
     deleteProductUseCase;
-    constructor(productService, deleteProductUseCase) {
+    redisService;
+    constructor(productService, deleteProductUseCase, redisService) {
         this.productService = productService;
         this.deleteProductUseCase = deleteProductUseCase;
+        this.redisService = redisService;
     }
     async execute(uuid) {
         const product = await this.productService.getProduct({
@@ -33,6 +37,9 @@ let DeleteProductHandler = class DeleteProductHandler {
             throw new product_exception_error_1.ProductExceptionError(product_error_enum_1.ProductErrorCode.PRODUCT_NOT_FOUND);
         }
         await this.deleteProductUseCase.execute(uuid);
+        await this.redisService.invalidateKey(redis_keys_constants_1.REDIS_KEYS.PRODUCT(uuid));
+        await this.redisService.invalidateKey(redis_keys_constants_1.REDIS_KEYS.PRODUCT_ALL);
+        await this.redisService.invalidateKey(redis_keys_constants_1.REDIS_KEYS.INVALIDATE_PRODUCT_ALL);
         return {
             message: 'Produto deletado com sucesso',
         };
@@ -42,6 +49,7 @@ exports.DeleteProductHandler = DeleteProductHandler;
 exports.DeleteProductHandler = DeleteProductHandler = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)(product_constants_1.IProductServiceToken)),
-    __metadata("design:paramtypes", [Object, delete_product_use_case_1.DeleteProductUseCase])
+    __metadata("design:paramtypes", [Object, delete_product_use_case_1.DeleteProductUseCase,
+        redis_service_1.RedisService])
 ], DeleteProductHandler);
 //# sourceMappingURL=delete-product.handler.js.map

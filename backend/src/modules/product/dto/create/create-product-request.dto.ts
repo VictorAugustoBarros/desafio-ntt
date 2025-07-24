@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateProductRequest {
   @ApiProperty()
@@ -11,7 +11,7 @@ export class CreateProductRequest {
   description: string;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   price: number;
 
   @ApiProperty()

@@ -19,14 +19,18 @@ const product_error_enum_1 = require("../exceptions/product-error.enum");
 const product_exception_error_1 = require("../exceptions/product-exception.error");
 const update_product_use_case_1 = require("../use-cases/update-product.use-case");
 const category_constants_1 = require("../../category/constants/category.constants");
+const redis_service_1 = require("../../../shared/redis/redis.service");
+const redis_keys_constants_1 = require("../../../shared/redis/constants/redis-keys.constants");
 let UpdateProductHandler = class UpdateProductHandler {
     productService;
     categoryService;
     updateProductUseCase;
-    constructor(productService, categoryService, updateProductUseCase) {
+    redisService;
+    constructor(productService, categoryService, updateProductUseCase, redisService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.updateProductUseCase = updateProductUseCase;
+        this.redisService = redisService;
     }
     async execute(uuid, updateProduct) {
         const product = await this.productService.getProduct({
@@ -51,6 +55,9 @@ let UpdateProductHandler = class UpdateProductHandler {
             params.categoryId = category.id;
         }
         await this.updateProductUseCase.execute(params);
+        await this.redisService.invalidateKey(redis_keys_constants_1.REDIS_KEYS.PRODUCT(uuid));
+        await this.redisService.invalidateKey(redis_keys_constants_1.REDIS_KEYS.PRODUCT_ALL);
+        await this.redisService.invalidateKey(redis_keys_constants_1.REDIS_KEYS.INVALIDATE_PRODUCT_ALL);
         return {
             message: 'Produto atualizada com sucesso',
         };
@@ -61,6 +68,7 @@ exports.UpdateProductHandler = UpdateProductHandler = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)(product_constants_1.IProductServiceToken)),
     __param(1, (0, common_1.Inject)(category_constants_1.ICategoryServiceToken)),
-    __metadata("design:paramtypes", [Object, Object, update_product_use_case_1.UpdateProductUseCase])
+    __metadata("design:paramtypes", [Object, Object, update_product_use_case_1.UpdateProductUseCase,
+        redis_service_1.RedisService])
 ], UpdateProductHandler);
 //# sourceMappingURL=update-product.handler.js.map

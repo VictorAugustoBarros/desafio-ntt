@@ -28,6 +28,7 @@ const update_product_request_dto_1 = require("../dto/update/update-product-reque
 const update_product_response_dto_1 = require("../dto/update/update-product-response.dto");
 const delete_product_handler_1 = require("../handlers/delete-product.handler");
 const update_product_handler_1 = require("../handlers/update-product.handler");
+const pagination_dto_1 = require("../../../common/dto/pagination.dto");
 let ProductController = class ProductController {
     findAllProductsHandler;
     createProductHandler;
@@ -41,8 +42,8 @@ let ProductController = class ProductController {
         this.updateProductHandler = updateProductHandler;
         this.deleteProductHandler = deleteProductHandler;
     }
-    findAll() {
-        return this.findAllProductsHandler.execute();
+    findAll(paginationDto) {
+        return this.findAllProductsHandler.execute(paginationDto);
     }
     findByUuid(uuid) {
         return this.findProductHandler.execute(uuid);
@@ -66,8 +67,9 @@ __decorate([
         description: 'List of products',
         type: find_all_products_response_dto_1.FindAllProductsResponse,
     }),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [pagination_dto_1.PaginationDto]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "findAll", null);
 __decorate([

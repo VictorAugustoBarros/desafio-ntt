@@ -3,6 +3,7 @@ export declare class ProductsCategory {
     name: string;
 }
 export declare class FindProductResponse {
+    uuid: string;
     name: string;
     description: string;
     price: number;

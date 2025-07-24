@@ -10,6 +10,7 @@ import { UpdateProductRequest } from '../dto/update/update-product-request.dto';
 import { UpdateProductResponse } from '../dto/update/update-product-response.dto';
 import { DeleteProductHandler } from '../handlers/delete-product.handler';
 import { UpdateProductHandler } from '../handlers/update-product.handler';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 export declare class ProductController {
     private readonly findAllProductsHandler;
     private readonly createProductHandler;
@@ -17,7 +18,7 @@ export declare class ProductController {
     private readonly updateProductHandler;
     private readonly deleteProductHandler;
     constructor(findAllProductsHandler: FindAllProductsHandler, createProductHandler: CreateProductHandler, findProductHandler: FindProductHandler, updateProductHandler: UpdateProductHandler, deleteProductHandler: DeleteProductHandler);
-    findAll(): Promise<FindAllProductsResponse>;
+    findAll(paginationDto: PaginationDto): Promise<FindAllProductsResponse>;
     findByUuid(uuid: string): Promise<FindProductResponse>;
     create(request: CreateProductRequest): Promise<CreateProductResponse>;
     update(uuid: string, request: UpdateProductRequest): Promise<UpdateProductResponse>;

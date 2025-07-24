@@ -25,7 +25,7 @@ export default function NotFound() {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <Link href="/">
+            <Link href="/product">
               <Button className="w-full">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Voltar para Produtos

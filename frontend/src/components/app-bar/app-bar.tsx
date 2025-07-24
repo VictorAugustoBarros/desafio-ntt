@@ -27,6 +27,13 @@ export default function AppBar() {
           className="font-medium hover:text-primary transition-colors"
           prefetch={false}
         >
+          Home
+        </Link>
+        <Link
+          href="/products"
+          className="font-medium hover:text-primary transition-colors"
+          prefetch={false}
+        >
           Produtos
         </Link>
       </nav>

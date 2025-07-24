@@ -13,20 +13,26 @@ exports.FindAllProductsHandler = void 0;
 const common_1 = require("@nestjs/common");
 const find_all_products_use_case_1 = require("../use-cases/find-all-products.use-case");
 const redis_service_1 = require("../../../shared/redis/redis.service");
+const redis_keys_constants_1 = require("../../../shared/redis/constants/redis-keys.constants");
 let FindAllProductsHandler = class FindAllProductsHandler {
     findAllProductsUseCase;
     redisService;
-    cacheKey = 'products:all';
     constructor(findAllProductsUseCase, redisService) {
         this.findAllProductsUseCase = findAllProductsUseCase;
         this.redisService = redisService;
     }
-    async execute() {
-        const cached = await this.redisService.getKey(this.cacheKey);
+    async execute(paginationDto) {
+        const cacheKey = paginationDto.limit || paginationDto.offset
+            ? redis_keys_constants_1.REDIS_KEYS.PRODUCTS_PAGINATED(paginationDto.limit, paginationDto.offset)
+            : redis_keys_constants_1.REDIS_KEYS.PRODUCT_ALL;
+        const cached = await this.redisService.getKey(cacheKey);
         if (cached) {
             return JSON.parse(cached);
         }
-        const products = await this.findAllProductsUseCase.execute();
+        if (cached) {
+            return JSON.parse(cached);
+        }
+        const products = await this.findAllProductsUseCase.execute(paginationDto);
         const response = {
             products: products.map((product) => ({
                 uuid: product.uuid,
@@ -39,7 +45,7 @@ let FindAllProductsHandler = class FindAllProductsHandler {
                 },
             })),
         };
-        await this.redisService.setKey(this.cacheKey, JSON.stringify(response), 60);
+        await this.redisService.setKey(cacheKey, JSON.stringify(response), 60);
         return response;
     }
 };

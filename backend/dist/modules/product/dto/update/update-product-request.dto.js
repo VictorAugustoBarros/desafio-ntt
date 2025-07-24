@@ -33,8 +33,8 @@ __decorate([
 ], UpdateProductRequest.prototype, "description", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], UpdateProductRequest.prototype, "price", void 0);
 __decorate([

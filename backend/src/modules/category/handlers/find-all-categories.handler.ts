@@ -11,7 +11,7 @@ export class FindAllCategoriesHandler {
     const categorias = await this.findAllCategoriesUseCase.execute();
 
     return {
-      categorias: categorias.map((category: Categoria) => {
+      categories: categorias.map((category: Categoria) => {
         return { uuid: String(category.uuid), name: category.name };
       }),
     };

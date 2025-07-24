@@ -5,6 +5,5 @@ export declare class FindProductHandler {
     private readonly productService;
     private redisService;
     constructor(productService: IProductService, redisService: RedisService);
-    private getCacheKey;
     execute(uuid: string): Promise<FindProductResponse>;
 }

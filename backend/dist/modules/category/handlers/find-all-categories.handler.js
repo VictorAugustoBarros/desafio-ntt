@@ -20,7 +20,7 @@ let FindAllCategoriesHandler = class FindAllCategoriesHandler {
     async execute() {
         const categorias = await this.findAllCategoriesUseCase.execute();
         return {
-            categorias: categorias.map((category) => {
+            categories: categorias.map((category) => {
                 return { uuid: String(category.uuid), name: category.name };
             }),
         };

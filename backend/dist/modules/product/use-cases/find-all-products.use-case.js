@@ -20,12 +20,15 @@ let FindAllProductsUseCase = FindAllProductsUseCase_1 = class FindAllProductsUse
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async execute() {
+    async execute(paginationDto) {
         try {
+            const { limit, offset } = paginationDto || {};
             const productsDB = await this.prisma.produto.findMany({
                 include: {
                     category: true,
                 },
+                take: limit,
+                skip: offset,
             });
             return productsDB.map((productDB) => {
                 return (0, product_mapper_1.toProductDto)(productDB);

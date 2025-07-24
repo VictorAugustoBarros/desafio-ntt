@@ -29,12 +29,18 @@ __decorate([
     __metadata("design:type", String)
 ], ProductsCategory.prototype, "name", void 0);
 class FindProductResponse {
+    uuid;
     name;
     description;
     price;
     category;
 }
 exports.FindProductResponse = FindProductResponse;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FindProductResponse.prototype, "uuid", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsString)(),

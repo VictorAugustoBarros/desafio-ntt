@@ -18,12 +18,16 @@ const create_product_use_case_1 = require("../use-cases/create-product.use-case"
 const product_exception_error_1 = require("../exceptions/product-exception.error");
 const product_error_enum_1 = require("../exceptions/product-error.enum");
 const category_constants_1 = require("../../category/constants/category.constants");
+const redis_service_1 = require("../../../shared/redis/redis.service");
+const redis_keys_constants_1 = require("../../../shared/redis/constants/redis-keys.constants");
 let CreateProductHandler = class CreateProductHandler {
     categoryService;
     createProductUseCase;
-    constructor(categoryService, createProductUseCase) {
+    redisService;
+    constructor(categoryService, createProductUseCase, redisService) {
         this.categoryService = categoryService;
         this.createProductUseCase = createProductUseCase;
+        this.redisService = redisService;
     }
     async execute(request) {
         const category = await this.categoryService.getCategory({
@@ -33,6 +37,8 @@ let CreateProductHandler = class CreateProductHandler {
             throw new product_exception_error_1.ProductExceptionError(product_error_enum_1.ProductErrorCode.PRODUCT_CATEGORY_NOT_FOUND);
         }
         const product = await this.createProductUseCase.execute(request.name, request.description, request.price, category.id);
+        await this.redisService.invalidateKey(redis_keys_constants_1.REDIS_KEYS.PRODUCT_ALL);
+        await this.redisService.invalidateKey(redis_keys_constants_1.REDIS_KEYS.INVALIDATE_PRODUCT_ALL);
         return {
             message: 'Product criada com sucesso',
             uuid: String(product.uuid),
@@ -43,6 +49,7 @@ exports.CreateProductHandler = CreateProductHandler;
 exports.CreateProductHandler = CreateProductHandler = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)(category_constants_1.ICategoryServiceToken)),
-    __metadata("design:paramtypes", [Object, create_product_use_case_1.CreateProductUseCase])
+    __metadata("design:paramtypes", [Object, create_product_use_case_1.CreateProductUseCase,
+        redis_service_1.RedisService])
 ], CreateProductHandler);
 //# sourceMappingURL=create-product.handler.js.map
