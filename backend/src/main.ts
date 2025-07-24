@@ -8,7 +8,8 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    // origin: ['http://localhost:4000', 'http://ntt-data-frontend:4000'],
+    origin: true,
     credentials: true,
   });
 
@@ -31,7 +32,7 @@ async function bootstrap(): Promise<void> {
 
   SwaggerModule.setup('api/docs', app, documentFactory());
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(3000);
 }
 
 bootstrap();

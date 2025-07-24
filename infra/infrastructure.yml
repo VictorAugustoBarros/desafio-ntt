@@ -25,6 +25,34 @@ services:
     networks:
       - ntt-data-network
 
+  ntt-data-backend:
+    extends:
+      file: ../backend/compose.yml
+      service: ntt-data-backend
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+    depends_on:
+      - ntt-data-db
+      - ntt-data-redis
+    networks:
+      - ntt-data-network
+
+  ntt-data-frontend:
+    extends:
+      file: ../frontend/compose.yml
+      service: ntt-data-frontend
+    environment:
+      NEXT_PUBLIC_BACKEND_API: ${NEXT_PUBLIC_BACKEND_API}
+    depends_on:
+      - ntt-data-backend
+    networks:
+      - ntt-data-network
+
 volumes:
   postgres_data:
 

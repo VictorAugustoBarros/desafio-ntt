@@ -1,0 +1,18 @@
+services:
+  ntt-data-frontend:
+    container_name: ntt-data-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '4000:3000'
+    networks:
+      - ntt-data-network
+    environment:
+      NEXT_PUBLIC_BACKEND_API: ${NEXT_PUBLIC_BACKEND_API}
+
+networks:
+  ntt-data-network:
+    name: ntt-data-network
+    external: true
+    driver: bridge

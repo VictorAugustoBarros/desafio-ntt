@@ -19,9 +19,9 @@ interface DeleteProductResponse {
 }
 
 // GET all products
-export async function getProducts() {
+export async function getProducts(page: number = 1, limit: number = 20) {
   try {
-    const response = await fetch(BASE_URL, {
+    const response = await fetch(`${BASE_URL}?page=${page}&limit=${limit}`, {
       method: 'GET',
     });
 
@@ -54,6 +54,7 @@ export async function createProduct(payload: CreateProductRequest) {
   try {
     const response = await fetch(BASE_URL, {
       method: 'POST',
+
       headers: {
         'Content-Type': 'application/json',
       },
@@ -75,6 +76,7 @@ export async function updateProduct(
   try {
     const response = await fetch(`${BASE_URL}/${uuid}`, {
       method: 'PUT',
+
       headers: {
         'Content-Type': 'application/json',
       },
