@@ -17,15 +17,20 @@
   /frontend
   /backend
   /infra
+  /docs
   ```
 
 ### 4. **Como Executar o Projeto**
 
 - Comando principal:
 
-  ```bash
+```bash
+docker compose -f infra/infrastructure.yml up -d
+```
+
+```bash
   docker compose -f infra/infrastructure.yml up -d
-  ```
+```
 
 - Informar as portas expostas:
 
