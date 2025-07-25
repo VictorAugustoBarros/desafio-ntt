@@ -53,6 +53,7 @@ export class ProductController {
   findAll(
     @Query() paginationDto: PaginationDto,
   ): Promise<FindAllProductsResponse> {
+    console.log('Teste');
     return this.findAllProductsHandler.execute(paginationDto);
   }
 

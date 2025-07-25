@@ -1,4 +1,13 @@
-const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_API}/products`;
+import { Product } from '@/lib/types';
+import axios from 'axios';
+
+const axiosInstance = axios.create({
+  baseURL: `${process.env.NEXT_PUBLIC_BACKEND_API}/products`,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
 interface CreateProductRequest {
   name: string;
@@ -19,14 +28,13 @@ interface DeleteProductResponse {
 }
 
 // GET all products
-export async function getProducts(page: number = 1, limit: number = 20) {
+export async function getProducts(page = undefined, limit = undefined) {
   try {
-    const response = await fetch(`${BASE_URL}?page=${page}&limit=${limit}`, {
-      method: 'GET',
+    const response = await axiosInstance.get('', {
+      params: { page, limit },
     });
 
-    const data = await response.json();
-    return data.products;
+    return response.data.products;
   } catch (error) {
     console.error('Failed to fetch products:', error);
     return [];
@@ -34,34 +42,21 @@ export async function getProducts(page: number = 1, limit: number = 20) {
 }
 
 // GET product by UUID
-export async function getProductById(uuid: string) {
+export async function getProductById(uuid: string): Promise<Product | null> {
   try {
-    const response = await fetch(`${BASE_URL}/${uuid}`, {
-      method: 'GET',
-    });
-
-    const product = await response.json();
-
-    return product;
+    const response = await axiosInstance.get(`/${uuid}`);
+    return response.data;
   } catch (error) {
     console.error('Failed to fetch product:', error);
-    return null;
+    throw error;
   }
 }
 
 // POST create product
 export async function createProduct(payload: CreateProductRequest) {
   try {
-    const response = await fetch(BASE_URL, {
-      method: 'POST',
-
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    return await response.json();
+    const response = await axiosInstance.post('', payload);
+    return response.data;
   } catch (error) {
     console.error('Failed to create product:', error);
     return null;
@@ -74,17 +69,8 @@ export async function updateProduct(
   payload: UpdateProductRequest,
 ) {
   try {
-    const response = await fetch(`${BASE_URL}/${uuid}`, {
-      method: 'PUT',
-
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    return data.product;
+    const response = await axiosInstance.put(`/${uuid}`, payload);
+    return response.data.product;
   } catch (error) {
     console.error('Failed to update product:', error);
     return null;
@@ -96,12 +82,8 @@ export async function deleteProduct(
   uuid: string,
 ): Promise<DeleteProductResponse | null> {
   try {
-    const response = await fetch(`${BASE_URL}/${uuid}`, {
-      method: 'DELETE',
-    });
-
-    const data = await response.json();
-    return data as DeleteProductResponse;
+    const response = await axiosInstance.delete(`/${uuid}`);
+    return response.data as DeleteProductResponse;
   } catch (error) {
     console.error('Failed to delete product:', error);
     return null;

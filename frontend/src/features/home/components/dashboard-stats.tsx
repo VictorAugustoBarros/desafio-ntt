@@ -13,7 +13,11 @@ export default function DashboardStats({
 }: DashboardStatsProps) {
   const totalProducts = products.length;
   const averagePrice =
-    products.reduce((sum, product) => sum + product.price, 0) / products.length;
+    products.reduce((acc, p) => {
+      const price = Number(p.price);
+      return acc + (isNaN(price) ? 0 : price);
+    }, 0) / (products.length || 1);
+
   const totalValue = products.reduce((sum, product) => sum + product.price, 0);
 
   const stats = [

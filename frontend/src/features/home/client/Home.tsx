@@ -11,13 +11,30 @@ import type { Category, Product } from '@/lib/types';
 import CategoryOverview from '../components/category-overview';
 import DashboardStats from '../components/dashboard-stats';
 import FeaturedProducts from '../components/featured-products';
+import { useEffect, useState } from 'react';
+import { getCategories } from '@/services/category.service';
+import { getProducts } from '@/services/product.service';
 
-interface HomeClientProps {
-  products: Product[];
-  categories: Category[];
-}
+export default function HomeClient() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
-export default function HomeClient({ products, categories }: HomeClientProps) {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productsData = await getProducts();
+        const categoriesData = await getCategories();
+
+        setProducts(productsData);
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
       {/* Seção de Cabeçalho */}

@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: unless-stopped
     networks:
       - ntt-data-network
     ports:
@@ -18,5 +19,4 @@ services:
 networks:
   ntt-data-network:
     name: ntt-data-network
-    external: true
     driver: bridge

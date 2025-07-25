@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import ProductDetailsClient from '@/features/products/client/ProductDetails';
-import { getProductById } from '@/services/product.service';
 
 type Props = {
   params: Promise<{ uuid: string }>;
@@ -9,9 +8,7 @@ type Props = {
 export default async function ProductDetailsPage({ params }: Props) {
   const { uuid } = await params;
 
-  const product = await getProductById(uuid);
+  if (!uuid) return notFound();
 
-  if (!product) return notFound();
-
-  return <ProductDetailsClient product={product} />;
+  return <ProductDetailsClient uuid={uuid} />;
 }

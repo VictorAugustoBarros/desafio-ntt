@@ -43,6 +43,7 @@ let ProductController = class ProductController {
         this.deleteProductHandler = deleteProductHandler;
     }
     findAll(paginationDto) {
+        console.log('Teste');
         return this.findAllProductsHandler.execute(paginationDto);
     }
     findByUuid(uuid) {

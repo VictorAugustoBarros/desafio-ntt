@@ -24,20 +24,20 @@ import {
 } from '@/components/ui/select';
 import { Plus, Edit } from 'lucide-react';
 import type { Category, Product } from '@/lib/types';
-import { getCategories } from '@/services/category.service';
 
 interface ProductFormModalProps {
+  categories: Category[];
   onSave: (product: Product) => void;
   editProduct?: Product | null;
   onEditComplete?: () => void;
 }
 
 export default function ProductFormModal({
+  categories,
   onSave,
   editProduct = null,
   onEditComplete,
 }: ProductFormModalProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -46,15 +46,6 @@ export default function ProductFormModal({
     categoryUuid: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  // Busca categorias ao montar o componente
-  useEffect(() => {
-    async function fetchCategories() {
-      const cats = await getCategories();
-      setCategories(cats);
-    }
-    fetchCategories();
-  }, []);
 
   // Ao receber produto para editar, preenche o form e abre modal
   useEffect(() => {

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,26 +12,44 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Package, Tag, DollarSign } from 'lucide-react';
-import type { Product } from '@/lib/types';
+import type { Category, Product } from '@/lib/types';
 import DeleteProductDialog from '../components/delete-product-dialog';
 import { toast, Toaster } from 'sonner';
-import { useRouter } from 'next/navigation';
-import { deleteProduct, updateProduct } from '@/services/product.service';
+import { notFound, useRouter } from 'next/navigation';
+import {
+  deleteProduct,
+  getProductById,
+  updateProduct,
+} from '@/services/product.service';
 import ProductFormModal from '../components/product-form-modal';
+import { getCategories } from '@/services/category.service';
 
-interface ProductDetailsClientProps {
-  product: Product;
-}
-
-export default function ProductDetailsClient({
-  product: initialProduct,
-}: ProductDetailsClientProps) {
+export default function ProductDetailsClient({ uuid }: { uuid: string }) {
   const router = useRouter();
-  const [product, setProduct] = useState<Product>(initialProduct);
+  const [product, setProduct] = useState<Product | undefined>();
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productData = await getProductById(uuid);
+        if (!productData) {
+          return notFound();
+        }
+        setProduct(productData);
+
+        const categoriesData = await getCategories();
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
+
+    fetchData();
+  }, [uuid]);
 
   const handleUpdateProduct = async (updatedProduct: Product) => {
     try {
-      toast('Atualizando produto...');
       console.log(updatedProduct);
 
       await updateProduct(updatedProduct.uuid, {
@@ -63,6 +81,14 @@ export default function ProductDetailsClient({
     }
   };
 
+  if (!product) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <p className="text-muted-foreground">Carregando produto...</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <Toaster position="top-right" richColors closeButton duration={4000} />
@@ -85,6 +111,7 @@ export default function ProductDetailsClient({
             <ProductFormModal
               editProduct={product}
               onSave={handleUpdateProduct}
+              categories={categories}
             />
 
             <DeleteProductDialog

@@ -2,19 +2,34 @@
 
 import ProductList from '@/features/products/components/product-list';
 import { Badge } from '@/components/ui/badge';
-import { useState } from 'react';
-import { Product } from '@/lib/types';
+import { useEffect, useState } from 'react';
+import { Category, Product } from '@/lib/types';
 import ProductFormModal from '@/features/products/components/product-form-modal';
-import { createProduct } from '@/services/product.service';
+import { createProduct, getProducts } from '@/services/product.service';
 import { toast } from 'sonner';
+import { getCategories } from '@/services/category.service';
 
-interface ProductsClientProps {
-  products: Product[];
-}
+export default function ProductsClient() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
-export default function ProductsClient({ products }: ProductsClientProps) {
-  const [productsList, setProductsList] = useState<Product[]>(products);
-  const totalProducts = productsList.length;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productsData = await getProducts();
+        const categoriesData = await getCategories();
+
+        setProducts(productsData);
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const totalProducts = products.length;
 
   const handleSaveProduct = async (
     productData: Omit<Product, 'uuid'> | Product,
@@ -23,7 +38,7 @@ export default function ProductsClient({ products }: ProductsClientProps) {
       // Editing existing product
       console.log('Editing Product...', productData);
 
-      setProductsList((prev) =>
+      setProducts((prev) =>
         prev.map((p) => (p.uuid === productData.uuid ? productData : p)),
       );
     } else {
@@ -39,7 +54,7 @@ export default function ProductsClient({ products }: ProductsClientProps) {
         ...productData,
         uuid: productSaved.uuid,
       };
-      setProductsList((prev) => [newProduct, ...prev]);
+      setProducts((prev) => [newProduct, ...prev]);
 
       toast.success('Produto cadastrado com sucesso!.');
     }
@@ -50,7 +65,10 @@ export default function ProductsClient({ products }: ProductsClientProps) {
       <div className="mb-8">
         <div className="flex justify-between items-start mb-4">
           <h1 className="text-3xl font-bold">Nossos Produtos</h1>
-          <ProductFormModal onSave={handleSaveProduct} />
+          <ProductFormModal
+            onSave={handleSaveProduct}
+            categories={categories}
+          />
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
@@ -62,7 +80,7 @@ export default function ProductsClient({ products }: ProductsClientProps) {
         </p>
       </div>
 
-      <ProductList products={productsList} />
+      <ProductList products={products} />
     </div>
   );
 }

@@ -8,8 +8,7 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    // origin: ['http://localhost:4000', 'http://ntt-data-frontend:4000'],
-    origin: true,
+    origin: ['http://localhost:4000', 'http://localhost:4001'],
     credentials: true,
   });
 
