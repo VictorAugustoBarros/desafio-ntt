@@ -7,8 +7,7 @@ import { ProductExceptionError } from '../exceptions/product-exception.error';
 import { ProductErrorCode } from '../exceptions/product-error.enum';
 import { ICategoryServiceToken } from 'src/modules/category/constants/category.constants';
 import { ICategoryService } from 'src/modules/category/interfaces/category.service.interface';
-import { RedisService } from 'src/shared/redis/redis.service';
-import { REDIS_KEYS } from 'src/shared/redis/constants/redis-keys.constants';
+import { ProductsCacheService } from '../services/products.cache';
 
 @Injectable()
 export class CreateProductHandler {
@@ -16,7 +15,7 @@ export class CreateProductHandler {
     @Inject(ICategoryServiceToken)
     private readonly categoryService: ICategoryService,
     private createProductUseCase: CreateProductUseCase,
-    private redisService: RedisService,
+    private readonly productsCache: ProductsCacheService,
   ) {}
 
   async execute(request: CreateProductRequest): Promise<CreateProductResponse> {
@@ -36,8 +35,8 @@ export class CreateProductHandler {
       category.id,
     );
 
-    await this.redisService.invalidateKey(REDIS_KEYS.PRODUCT_ALL);
-    await this.redisService.invalidateKey(REDIS_KEYS.INVALIDATE_PRODUCT_ALL);
+    // Invalidar o Cache
+    await this.productsCache.invalidateAllProductList();
 
     return {
       message: 'Product criada com sucesso',

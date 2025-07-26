@@ -24,18 +24,6 @@
       "category": "Eletrônicos"
     },
     {
-      "name": "Mouse Logitech MX",
-      "description": "Mouse ergonômico sem fio",
-      "price": 299.9,
-      "category": "Eletrônicos"
-    },
-    {
-      "name": "Monitor LG 24\"",
-      "description": "Monitor Full HD com tecnologia IPS",
-      "price": 899.0,
-      "category": "Eletrônicos"
-    },
-    {
       "name": "Camiseta Branca Básica",
       "description": "Camiseta 100% algodão masculina",
       "price": 49.9,
@@ -54,18 +42,6 @@
       "category": "Roupas"
     },
     {
-      "name": "Jaqueta Corta Vento",
-      "description": "Jaqueta leve impermeável com capuz",
-      "price": 199.0,
-      "category": "Roupas"
-    },
-    {
-      "name": "Vestido Floral",
-      "description": "Vestido feminino estampado",
-      "price": 159.9,
-      "category": "Roupas"
-    },
-    {
       "name": "Clean Code",
       "description": "Livro sobre boas práticas de programação - Robert C. Martin",
       "price": 119.0,
@@ -81,18 +57,6 @@
       "name": "Entendendo Algoritmos",
       "description": "Livro visual para aprender algoritmos e estruturas de dados",
       "price": 89.9,
-      "category": "Livros"
-    },
-    {
-      "name": "Prisma ORM na Prática",
-      "description": "Guia prático de uso do Prisma ORM em aplicações Node.js",
-      "price": 69.9,
-      "category": "Livros"
-    },
-    {
-      "name": "JavaScript: The Good Parts",
-      "description": "Um clássico sobre JavaScript moderno",
-      "price": 79.9,
       "category": "Livros"
     }
   ]

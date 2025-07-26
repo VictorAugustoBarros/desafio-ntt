@@ -5,8 +5,7 @@ import { IProductService } from '../interfaces/product.service.interface';
 import { ProductExceptionError } from '../exceptions/product-exception.error';
 import { ProductErrorCode } from '../exceptions/product-error.enum';
 import { DeleteProductUseCase } from '../use-cases/delete-product.use-case';
-import { REDIS_KEYS } from 'src/shared/redis/constants/redis-keys.constants';
-import { RedisService } from 'src/shared/redis/redis.service';
+import { ProductsCacheService } from '../services/products.cache';
 
 @Injectable()
 export class DeleteProductHandler {
@@ -14,7 +13,7 @@ export class DeleteProductHandler {
     @Inject(IProductServiceToken)
     private readonly productService: IProductService,
     private readonly deleteProductUseCase: DeleteProductUseCase,
-    private readonly redisService: RedisService,
+    private readonly productsCache: ProductsCacheService,
   ) {}
 
   async execute(uuid: string): Promise<DeleteProductResponse> {
@@ -27,9 +26,9 @@ export class DeleteProductHandler {
 
     await this.deleteProductUseCase.execute(uuid);
 
-    await this.redisService.invalidateKey(REDIS_KEYS.PRODUCT(uuid));
-    await this.redisService.invalidateKey(REDIS_KEYS.PRODUCT_ALL);
-    await this.redisService.invalidateKey(REDIS_KEYS.INVALIDATE_PRODUCT_ALL);
+    // Invalidar o Cache
+    await this.productsCache.invalidateProduct(uuid);
+    await this.productsCache.invalidateAllProductList();
 
     return {
       message: 'Produto deletado com sucesso',

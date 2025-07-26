@@ -15,6 +15,7 @@ import { FindProductByNameUseCase } from './use-cases/find-product-by-name.use-c
 import { FindProductByUuidUseCase } from './use-cases/find-product-by-id.use-case';
 import { DeleteProductUseCase } from './use-cases/delete-product.use-case';
 import { UpdateProductUseCase } from './use-cases/update-product.use-case';
+import { ProductsCacheService } from './services/products.cache';
 
 @Module({
   imports: [SharedModule, CategoryModule],
@@ -40,6 +41,7 @@ import { UpdateProductUseCase } from './use-cases/update-product.use-case';
       provide: IProductServiceToken,
       useClass: ProductService,
     },
+    ProductsCacheService,
   ],
 })
 export class ProductModule {}

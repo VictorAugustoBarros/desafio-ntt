@@ -11,8 +11,7 @@ import {
 } from '../use-cases/update-product.use-case';
 import { ICategoryServiceToken } from 'src/modules/category/constants/category.constants';
 import { ICategoryService } from 'src/modules/category/interfaces/category.service.interface';
-import { RedisService } from 'src/shared/redis/redis.service';
-import { REDIS_KEYS } from 'src/shared/redis/constants/redis-keys.constants';
+import { ProductsCacheService } from '../services/products.cache';
 
 @Injectable()
 export class UpdateProductHandler {
@@ -22,7 +21,7 @@ export class UpdateProductHandler {
     @Inject(ICategoryServiceToken)
     private readonly categoryService: ICategoryService,
     private readonly updateProductUseCase: UpdateProductUseCase,
-    private readonly redisService: RedisService,
+    private readonly productsCache: ProductsCacheService,
   ) {}
 
   async execute(
@@ -59,9 +58,9 @@ export class UpdateProductHandler {
 
     await this.updateProductUseCase.execute(params);
 
-    await this.redisService.invalidateKey(REDIS_KEYS.PRODUCT(uuid));
-    await this.redisService.invalidateKey(REDIS_KEYS.PRODUCT_ALL);
-    await this.redisService.invalidateKey(REDIS_KEYS.INVALIDATE_PRODUCT_ALL);
+    // Invalidar o Cache
+    await this.productsCache.invalidateProduct(uuid);
+    await this.productsCache.invalidateAllProductList();
 
     return {
       message: 'Produto atualizada com sucesso',

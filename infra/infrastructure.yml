@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   ntt-data-db:
     image: postgres:16

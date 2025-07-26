@@ -1,73 +1,169 @@
-## ✅ Campos que devem ser incluídos no README
+# Sistema de Produtos
 
-### 1. **Introdução**
+## ✅ Introdução
 
-- Breve explicação sobre o projeto e o objetivo do desafio.
-- Menção das stacks usadas: Next.js (frontend), NestJS (backend), PostgreSQL e Redis (infra via Docker).
+Este projeto consiste em uma aplicação fullstack desenvolvida como parte de um desafio técnico. O sistema tem como objetivo realizar o gerenciamento de produtos e categorias, com funcionalidades completas de CRUD.
 
-### 2. **Tecnologias Utilizadas**
+A stack utilizada inclui:
 
-- Listagem das tecnologias separadas por categoria (Frontend, Backend, Infraestrutura).
+- **Frontend**: [Next.js](https://nextjs.org/)
+- **Backend**: [NestJS](https://nestjs.com/)
+- **Banco de Dados**: PostgreSQL
+- **Cache**: Redis
+- **Infraestrutura**: Docker e Docker Compose
 
-### 3. **Estrutura do Projeto**
+## ⚙️ Fluxogramas
 
-- Mapa de diretórios:
+### Diagrama C4 - Contexto
 
-  ```bash
-  /frontend
-  /backend
-  /infra
-  /docs
-  ```
+## ![Diagrama C4 - Contexto](docs/C4%20-%20Context.png)
 
-### 4. **Como Executar o Projeto**
+### Diagrama C4 - Containers
 
-- Comando principal:
+## ![Diagrama C4 - Containers](docs/C4%20-%20Containers.png)
+
+## ⚙️ Tecnologias Utilizadas
+
+### Frontend
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Shadcn UI
+
+### Backend
+
+- NestJS
+- TypeScript
+- Swagger (Documentação da API)
+- Prisma ORM
+
+### Infraestrutura
+
+- Docker
+- Docker Compose
+- PostgreSQL
+- Redis
+
+---
+
+## 🗂️ Estrutura do Projeto
 
 ```bash
-docker compose -f infra/infrastructure.yml up -d
+/
+├── frontend        # Aplicação Next.js
+├── backend         # API NestJS
+├── infra           # Arquivos de infraestrutura (Docker, scripts, etc.)
+├── docs            # Documentação e diagramas
+└── .env            # Variáveis de ambiente para docker-compose
 ```
+
+---
+
+## 🔐 Variáveis de Ambiente
+
+### 📌 Para executar os serviços separadamente:
+
+Crie um arquivo `.env` na raiz de cada pasta (`frontend`, `backend`, etc.) com as variáveis adequadas.
+
+#### Frontend
+
+```env
+NEXT_PUBLIC_BACKEND_API=""
+```
+
+#### Backend
+
+```env
+DATABASE_URL=""
+REDIS_URL=""
+```
+
+### 📦 Para executar via Docker Compose:
+
+Use o arquivo `.env` na raiz do projeto com as seguintes variáveis:
+
+```env
+POSTGRES_USER=""
+POSTGRES_PASSWORD=""
+POSTGRES_DB="admin"
+DATABASE_URL=""
+
+REDIS_URL=""
+NEXT_PUBLIC_BACKEND_API=""
+```
+
+---
+
+## 🚀 Como Executar o Projeto
+
+### 1. Subir os serviços com Docker
 
 ```bash
-  docker compose -f infra/infrastructure.yml up -d
+docker compose --env-file .env -f infra/infrastructure.yml up -d
 ```
 
-- Informar as portas expostas:
+### 2. Inicializar o banco de dados
 
-  | Serviço    | Porta  |
-  | ---------- | ------ |
-  | Frontend   | `3001` |
-  | Backend    | `3000` |
-  | Redis      | `6379` |
-  | PostgreSQL | `5432` |
+Execute o script para criação das tabelas e seed:
 
-### 5. **Variáveis de Ambiente**
+```bash
+./infra/database.sh
+```
 
-- Explicação sobre onde e como configurar `.env` (tanto no frontend quanto no backend).
-- Exemplo de variáveis para o banco de dados, Redis, etc.
+---
 
-### 6. **Endpoints Disponíveis**
+## 📡 Endpoints Disponíveis
 
-Com base no desafio:
+[Backend - Swagger](http://localhost:3000/api/docs)
 
-#### `/products`
+### `/products`
 
-- `GET /products`: lista todos os produtos.
-- `GET /products/:id`: retorna um produto por ID.
-- `POST /products`: cria um novo produto.
-- `PUT /products/:id`: atualiza um produto existente.
-- `DELETE /products/:id`: remove um produto.
+- `GET /products` — Lista todos os produtos.
+- `GET /products/:id` — Detalha um produto por ID.
+- `POST /products` — Cria um novo produto.
+- `PUT /products/:id` — Atualiza um produto existente.
+- `DELETE /products/:id` — Remove um produto.
 
-#### `/categories`
+### `/categories`
 
-- `GET /categories`: lista todas as categorias.
-- `GET /categories/:id`: retorna uma categoria por ID.
-- `POST /categories`: cria uma nova categoria.
-- `PUT /categories/:id`: atualiza uma categoria existente.
-- `DELETE /categories/:id`: remove uma categoria.
+- `GET /categories` — Lista todas as categorias.
+- `GET /categories/:id` — Detalha uma categoria por ID.
+- `POST /categories` — Cria uma nova categoria.
+- `PUT /categories/:id` — Atualiza uma categoria existente.
+- `DELETE /categories/:id` — Remove uma categoria.
 
-### 7. **Acesso ao Swagger (Documentação da API)**
+---
 
-Localização da documentação da API:
+## 🧩 Serviços e Portas
 
-http://localhost:3000/api/docs
+| Serviço    | Porta | URL de Acesso                                          |
+| ---------- | ----- | ------------------------------------------------------ |
+| Frontend   | 4000  | [http://localhost:4000](http://localhost:4000)         |
+| Backend    | 3000  | [http://localhost:3000/api](http://localhost:3000/api) |
+| Redis      | 6379  | —                                                      |
+| PostgreSQL | 5432  | —                                                      |
+
+---
+
+## 🧠 Cache
+
+### Técnica Utilizada: **Cache-Aside (Lazy-Loading)**
+
+Neste projeto, foi implementado um sistema de cache utilizando a estratégia **Cache-Aside**, também conhecida como **Lazy Loading Cache**. Nessa abordagem:
+
+- A aplicação verifica se os dados estão presentes no cache (Redis).
+- Se **existirem**, os dados são retornados diretamente do cache.
+- Se **não existirem**, os dados são buscados no banco de dados (PostgreSQL), armazenados no cache, e então retornados.
+
+Essa técnica é simples e eficiente para cenários de leitura frequente com escrita eventual, permitindo controle total sobre quando e o que será armazenado no cache.
+
+### 🗂️ Estrutura de Cache
+
+Os seguintes padrões de chave são utilizados no Redis:
+
+| Chave                               | Descrição                                         |
+| ----------------------------------- | ------------------------------------------------- |
+| `product:${uuid}`                   | Detalhes de um produto específico por ID (UUID)   |
+| `products:all`                      | Lista completa de produtos (sem paginação)        |
+| `products:all:limit:<n>:offset:<m>` | Lista paginada de produtos com `limit` e `offset` |
