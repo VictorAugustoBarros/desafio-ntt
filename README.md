@@ -97,15 +97,31 @@ NEXT_PUBLIC_BACKEND_API=""
 
 ## 🚀 Como Executar o Projeto
 
-### 1. Subir os serviços com Docker
+### Subir os serviços
+
+#### Docker Compose
 
 ```bash
 docker compose --env-file .env -f infra/infrastructure.yml up -d
 ```
 
+#### Manual
+
+- Backend
+
+```bash
+cd backend && npm run start:dev
+```
+
+- Frontend (Porta 4001)
+
+```bash
+cd frontend && npm run dev
+```
+
 ### 2. Inicializar o banco de dados
 
-Execute o script para criação das tabelas e seed:
+Execute o script para criação das tabelas e criação de registros para teste (seed)
 
 ```bash
 ./infra/database.sh
