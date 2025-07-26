@@ -50,8 +50,6 @@ export default function ProductDetailsClient({ uuid }: { uuid: string }) {
 
   const handleUpdateProduct = async (updatedProduct: Product) => {
     try {
-      console.log(updatedProduct);
-
       await updateProduct(updatedProduct.uuid, {
         name: updatedProduct.name,
         description: updatedProduct.description,

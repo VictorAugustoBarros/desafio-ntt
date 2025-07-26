@@ -35,9 +35,6 @@ export default function ProductsClient() {
     productData: Omit<Product, 'uuid'> | Product,
   ) => {
     if ('uuid' in productData && productData.uuid) {
-      // Editing existing product
-      console.log('Editing Product...', productData);
-
       setProducts((prev) =>
         prev.map((p) => (p.uuid === productData.uuid ? productData : p)),
       );
