@@ -26,6 +26,9 @@ export class FindAllProductsUseCase {
         },
         take: limit,
         skip: offset,
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       return productsDB.map((productDB: Produto) => {

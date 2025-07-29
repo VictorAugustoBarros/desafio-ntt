@@ -23,7 +23,7 @@ let FindAllProductsHandler = class FindAllProductsHandler {
     async execute(paginationDto) {
         const { limit, offset } = paginationDto;
         let cachedProducts = null;
-        if (limit && offset) {
+        if (typeof offset === 'number' && typeof limit === 'number') {
             cachedProducts = await this.productsCache.getPaginatedProducts(limit, offset);
         }
         else {
@@ -45,7 +45,7 @@ let FindAllProductsHandler = class FindAllProductsHandler {
                 },
             })),
         };
-        if (limit && offset) {
+        if (typeof offset === 'number' && typeof limit === 'number') {
             await this.productsCache.setPaginatedProducts(limit, offset, products);
         }
         else {

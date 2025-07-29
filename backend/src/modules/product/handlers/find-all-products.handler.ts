@@ -19,7 +19,7 @@ export class FindAllProductsHandler {
     let cachedProducts: ProductDto[] | null = null;
 
     // Tenta pegar do cache paginado ou geral
-    if (limit && offset) {
+    if (typeof offset === 'number' && typeof limit === 'number') {
       cachedProducts = await this.productsCache.getPaginatedProducts(
         limit,
         offset,
@@ -50,7 +50,7 @@ export class FindAllProductsHandler {
     };
 
     // Salva no cache com TTL de 60 segundos
-    if (limit && offset) {
+    if (typeof offset === 'number' && typeof limit === 'number') {
       await this.productsCache.setPaginatedProducts(limit, offset, products);
     } else {
       await this.productsCache.setProducts(products);

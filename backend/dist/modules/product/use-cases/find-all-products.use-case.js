@@ -29,6 +29,9 @@ let FindAllProductsUseCase = FindAllProductsUseCase_1 = class FindAllProductsUse
                 },
                 take: limit,
                 skip: offset,
+                orderBy: {
+                    createdAt: 'desc',
+                },
             });
             return productsDB.map((productDB) => {
                 return (0, product_mapper_1.toProductDto)(productDB);

@@ -28,11 +28,13 @@ interface DeleteProductResponse {
 }
 
 // GET all products
-export async function getProducts(page = undefined, limit = undefined) {
+export async function getProducts(page = 1, limit = 10) {
   try {
-    const response = await axiosInstance.get('', {
-      params: { page, limit },
-    });
+    const offset = (page - 1) * limit;
+
+    const response = await axiosInstance.get(
+      `?limit=${limit}&offset=${offset}`,
+    );
 
     return response.data.products;
   } catch (error) {

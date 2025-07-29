@@ -33,14 +33,14 @@ services:
     networks:
       - ntt-data-network
 
-  ntt-data-frontend:
-    extends:
-      file: ../frontend/compose.yml
-      service: ntt-data-frontend
-    depends_on:
-      - ntt-data-backend
-    networks:
-      - ntt-data-network
+  # ntt-data-frontend:
+  #   extends:
+  #     file: ../frontend/compose.yml
+  #     service: ntt-data-frontend
+  #   depends_on:
+  #     - ntt-data-backend
+  #   networks:
+  #     - ntt-data-network
 
 volumes:
   postgres_data:
